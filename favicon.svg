@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="12" fill="#b9a3c7"/>
+  <g fill="none" stroke="#241530" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 16c6-2.5 12-2.5 18 0 6-2.5 12-2.5 18 0v32c-6-2.5-12-2.5-18 0-6-2.5-12-2.5-18 0z"/>
+    <path d="M32 16v32"/>
+    <path d="M19 24h9M19 30h9M19 36h7"/>
+    <path d="M37 24h8M37 30h8"/>
+  </g>
+  <g transform="rotate(-12 46 46)">
+    <rect x="36" y="40" width="20" height="12" rx="2" fill="none" stroke="#1d7a4f" stroke-width="2.5"/>
+    <text x="46" y="49" text-anchor="middle" font-family="sans-serif" font-size="7" font-weight="700" fill="#1d7a4f">LUNAS</text>
+  </g>
+</svg>

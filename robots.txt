@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://kayzenn123.github.io/agent-tools-bukuutang/sitemap-index.xml
