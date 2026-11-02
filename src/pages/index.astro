@@ -1,0 +1,402 @@
+---
+import Layout from '~/layouts/Layout.astro';
+import StructuredData from '~/components/common/StructuredData.astro';
+import { SITE } from 'astrowind:config';
+
+const metadata = {
+  title: 'BukuUtang — Buku Bon Warung',
+  ignoreTitleTemplate: true,
+  description:
+    'Buku bon digital untuk warung: catat utang pelanggan, catat pembayaran, tagih via WA. 100% offline, tanpa akun, tanpa biaya.',
+};
+
+const organizationId = `${SITE?.site}/#organization`;
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${SITE?.site}/#website`,
+    name: 'BukuUtang',
+    url: SITE?.site,
+    inLanguage: 'id',
+    publisher: { '@id': organizationId },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'BukuUtang — Buku Bon Warung',
+    url: SITE?.site,
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Web',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'IDR' },
+    inLanguage: 'id',
+  },
+];
+---
+
+<Layout metadata={metadata}>
+  <StructuredData slot="head" schema={structuredData} />
+  <a class="bu-skip" href="#buku">Lompat ke buku bon</a>
+
+  <!-- Strip utilitas (bukan navbar: tanpa menu) -->
+  <header class="bu-strip">
+    <p class="bu-brand">
+      <svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M14 16c6-2.5 12-2.5 18 0 6-2.5 12-2.5 18 0v32c-6-2.5-12-2.5-18 0-6-2.5-12-2.5-18 0z"/><path d="M32 16v32"/></g></svg>
+      <span>Buku<em>Utang</em></span>
+    </p>
+    <div class="bu-strip-actions">
+      <button id="marquee-pause" class="bu-chip" aria-pressed="false" hidden>Jeda putaran</button>
+      <button id="motion-toggle" class="bu-chip" aria-pressed="true">Gerak: <span class="mt-state">nyala</span></button>
+      <a class="bu-chip" href="#cara">Cara pakai</a>
+    </div>
+  </header>
+
+  <main class="bu-grain">
+    <!-- ============ HERO: pintu BON ============ -->
+    <section id="hero" aria-label="Sampul buku">
+      <h1 class="sr-only">BukuUtang — buku bon warung</h1>
+      <div class="bu-plx" data-plx="0.12" aria-hidden="true">
+        <svg viewBox="0 0 120 80" width="120"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="10" width="104" height="60" rx="4" transform="rotate(-6 60 40)"/><text x="60" y="46" text-anchor="middle" font-size="14" fill="currentColor" stroke="none" font-family="cursive">label</text></g></svg>
+      </div>
+      <div class="bu-plx" data-plx="0.28" aria-hidden="true">
+        <svg viewBox="0 0 80 80" width="72"><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="40" cy="40" r="30"/><text x="40" y="47" text-anchor="middle" font-size="13" fill="currentColor" stroke="none">cap</text></g></svg>
+      </div>
+      <div class="bu-plx" data-plx="0.42" aria-hidden="true">
+        <svg viewBox="0 0 80 80" width="60"><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="40" cy="40" r="26"/><circle cx="40" cy="40" r="18"/><text x="40" y="48" text-anchor="middle" font-size="16" fill="currentColor" stroke="none">Rp</text></g></svg>
+      </div>
+      <div class="bu-plx" data-plx="0.2" aria-hidden="true">
+        <svg viewBox="0 0 100 120" width="76"><g fill="none" stroke="currentColor" stroke-width="2"><path d="M10 10h80v100H10z" stroke-dasharray="5 4"/><path d="M20 30h60M20 45h60M20 60h40"/></g></svg>
+      </div>
+      <div class="bu-plx" data-plx="0.55" aria-hidden="true">
+        <svg viewBox="0 0 90 90" width="66"><g fill="none" stroke="currentColor" stroke-width="2"><path d="M10 70 Q45 10 80 70"/><circle cx="45" cy="42" r="6"/></g></svg>
+      </div>
+
+      <svg class="bu-ring bu-ring-a bu-ring-rotate" viewBox="0 0 200 200" aria-hidden="true">
+        <defs><path id="ringA" d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0" /></defs>
+        <text class="bu-ring-text"><textPath href="#ringA">buku utang • warung berkah • catat bon • bayar lunas • buku utang • warung berkah •</textPath></text>
+      </svg>
+      <svg class="bu-ring bu-ring-b bu-ring-rotate" viewBox="0 0 200 200" aria-hidden="true">
+        <defs><path id="ringB" d="M100,100 m-58,0 a58,58 0 1,1 116,0 a58,58 0 1,1 -116,0" /></defs>
+        <text class="bu-ring-text"><textPath href="#ringB">jangan lupa bayar ya dek • bon dicatat •</textPath></text>
+      </svg>
+
+      <button id="bon-door" aria-label="Buka buku bon">
+        <span id="bon-word" aria-hidden="true"><span class="ghost">BON</span><span class="fill" aria-hidden="true">BON</span></span>
+        <span class="bu-door-hint" aria-hidden="true">ketuk untuk buka buku</span>
+      </button>
+      <p class="bu-hero-sub">Buku bon warung — catat utang, catat bayar, tagih via WA. Offline, tanpa akun.</p>
+    </section>
+
+    <!-- ============ BANNER DEEP-LINK ============ -->
+    <div id="deeplink-banner" class="bu-dl-banner" hidden>
+      <p>Ada buku dari tautan. Muat? Data yang sekarang ikut terganti.</p>
+      <div>
+        <button class="bu-btn bu-btn-pay" data-dl="load">Muat buku</button>
+        <button class="bu-btn bu-btn-ghost" data-dl="skip">Pakai data saya</button>
+      </div>
+    </div>
+
+    <!-- ============ BUKU: dua dunia ============ -->
+    <div id="buku">
+      <div class="bu-book">
+        <div id="world-tabs" role="tablist" aria-label="Pilih dunia">
+          <button role="tab" data-world="bon" aria-selected="true" class="on">Dunia Bon</button>
+          <button role="tab" data-world="lunas" aria-selected="false">Dunia Lunas</button>
+        </div>
+
+        <div class="bu-split">
+          <!-- DUNIA BON -->
+          <section id="dunia-bon" aria-label="Dunia Bon — utang aktif">
+            <header class="bu-world-head" data-fill>
+              <h2><span class="ghost">DUNIA BON</span><span class="fill" aria-hidden="true">DUNIA BON</span></h2>
+              <p>Yang masih ngutang. Disentuh, dunia sebelah ikut bereaksi.</p>
+            </header>
+            <div class="bu-tools">
+              <label class="bu-search">
+                <span class="sr-only">Cari pelanggan</span>
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M16 16l5 5"/></g></svg>
+                <input id="search" type="search" placeholder="Cari nama…" autocomplete="off">
+              </label>
+              <label class="bu-filter">
+                <span class="sr-only">Saring status</span>
+                <select id="filter-status">
+                  <option value="semua">Semua status</option>
+                  <option value="lancar">Lancar</option>
+                  <option value="waspada">Waspada</option>
+                  <option value="macet">Macet</option>
+                </select>
+              </label>
+            </div>
+            <div id="dunia-bon-list" class="bu-list" aria-live="polite"></div>
+
+            <details id="cara" class="bu-cara">
+              <summary>Cara pakai (dibaca Bu Buku)</summary>
+              <ol>
+                <li>Daftarkan pelanggan baru di bawah, lalu catat bonnya: barang + nominal + tanggal.</li>
+                <li>Kalau ada yang bayar, ketuk <strong>Catat bayar</strong> di kartunya. Stempel LUNAS jatuh sendiri.</li>
+                <li>Tagih yang telat via <strong>Tagih WA</strong> — pesannya sudah disiapkan.</li>
+                <li>Semua tersimpan di browser ini (offline). Bagikan lewat <strong>Salin tautan</strong>.</li>
+              </ol>
+            </details>
+
+            <form id="form-pelanggan" class="bu-form" novalidate>
+              <h3>Pelanggan baru</h3>
+              <label>Nama <input id="fp-nama" type="text" maxlength="80" autocomplete="off" placeholder="mis. Budi"></label>
+              <label>No. WA <span class="bu-opt">(boleh kosong)</span> <input id="fp-wa" type="tel" maxlength="30" autocomplete="off" placeholder="08…"></label>
+              <button class="bu-btn bu-btn-pay" type="submit">Masukkan buku</button>
+              <p class="bu-form-err" role="alert" hidden></p>
+            </form>
+
+            <form id="form-bon" class="bu-form" novalidate>
+              <h3>Catat bon</h3>
+              <label>Pelanggan
+                <select id="f-pelanggan" required><option value="">— pilih pelanggan —</option></select>
+              </label>
+              <label>Barang <input id="f-desc" type="text" maxlength="120" autocomplete="off" placeholder="mis. indomie 3 bks"></label>
+              <div class="bu-row2">
+                <label>Nominal (Rp) <input id="f-amount" type="number" min="1" max="1000000000" inputmode="numeric" placeholder="25000"></label>
+                <label>Tanggal <input id="f-date" type="date" required></label>
+              </div>
+              <button class="bu-btn bu-btn-pay" type="submit">Catat bon</button>
+              <p class="bu-form-err" role="alert" hidden></p>
+            </form>
+          </section>
+
+          <!-- DUNIA LUNAS -->
+          <section id="dunia-lunas" aria-label="Dunia Lunas — ringkasan dan pembayaran" hidden>
+            <header class="bu-world-head" data-fill>
+              <h2><span class="ghost">DUNIA LUNAS</span><span class="fill" aria-hidden="true">DUNIA LUNAS</span></h2>
+              <p>Yang sudah beres. Lega.</p>
+            </header>
+            <div class="bu-stats">
+              <div class="bu-stat bu-stat-main">
+                <p>Total piutang</p>
+                <p id="total-piutang" class="bu-total">Rp0</p>
+              </div>
+              <div class="bu-stat"><p>Pelanggan aktif</p><p id="stat-pelanggan" class="bu-stat-n">0</p></div>
+              <div class="bu-stat"><p>Perlu ditagih</p><p id="stat-macet" class="bu-stat-n">0</p></div>
+              <div class="bu-stat"><p>Bayar bulan ini</p><p id="stat-bayar" class="bu-stat-n">Rp0</p></div>
+            </div>
+            <h3 class="bu-sub">Riwayat bayar</h3>
+            <ul id="dunia-lunas-list" class="bu-list"></ul>
+            <h3 class="bu-sub">Buku &amp; berkas</h3>
+            <div class="bu-utils">
+              <button class="bu-btn" data-util="csv">Unduh CSV</button>
+              <button class="bu-btn" data-util="json">Unduh JSON</button>
+              <button class="bu-btn" data-util="import">Muat JSON</button>
+              <button class="bu-btn" data-util="link">Salin tautan</button>
+              <button class="bu-btn" data-util="print">Cetak</button>
+              <button class="bu-btn bu-btn-ghost bu-btn-danger" data-util="clear-sample">Bersihkan contoh</button>
+              <input id="import-file" type="file" accept="application/json,.json" hidden aria-label="Pilih file JSON">
+            </div>
+            <p id="sample-note" class="bu-sample" hidden>Ini data <strong>contoh</strong> biar langsung kebayang. <button class="bu-linklike" data-util="clear-sample">Bersihkan</button> kalau mau mulai dari kosong.</p>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ FINALE ============ -->
+    <section id="finale" aria-label="Penutup">
+      <div class="bu-book-wide">
+        <p class="bu-finale-kicker">Buku ditutup.</p>
+        <p class="bu-finale-big" data-fill><span class="ghost">Warung jalan, bon tercatat.</span><span class="fill" aria-hidden="true">Warung jalan, bon tercatat.</span></p>
+        <p>Bu Buku pamit. Jangan lupa catat setiap bon — sekecil apa pun.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bu-footer">
+    <button id="stamp-easter" aria-label="Cap stempel warung">
+      <svg viewBox="0 0 80 50" width="72" height="45" aria-hidden="true"><g transform="rotate(-8 40 25)"><rect x="8" y="8" width="64" height="34" rx="4" fill="none" stroke="currentColor" stroke-width="3"/><text x="40" y="32" text-anchor="middle" font-size="14" font-weight="700" fill="currentColor">WARUNG</text></g></svg>
+    </button>
+    <p>BukuUtang — buku bon warung · 100% offline · data hanya di browser ini</p>
+  </footer>
+
+  <div id="toast-region" aria-live="polite" aria-atomic="false"></div>
+  <div id="spotlight" hidden aria-hidden="true"></div>
+
+  <script>
+    import '../scripts/bu/main.js';
+  </script>
+
+  <style is:global>
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+    .bu-skip { position: absolute; left: 1rem; top: -4rem; z-index: 100; background: var(--bu-text); color: var(--bu-bg); padding: .75rem 1rem; border-radius: 4px; transition: top var(--bu-dur-fast) var(--bu-ease-out); }
+    .bu-skip:focus { top: 1rem; }
+
+    /* Strip utilitas */
+    .bu-strip { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .75rem 1rem; border-bottom: 2px solid var(--bu-line); position: sticky; top: 0; z-index: 50; background: color-mix(in oklch, var(--bu-bg) 92%, transparent); backdrop-filter: blur(6px); }
+    .bu-brand { display: flex; align-items: center; gap: .5rem; font-family: var(--font-display); font-size: var(--bu-fs-s); font-weight: 700; margin: 0; }
+    .bu-brand em { font-style: normal; color: var(--bu-accent-ink); }
+    .bu-strip-actions { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+    .bu-chip { font-size: var(--bu-fs-s); border: 2px solid var(--bu-text); background: var(--bu-surface); color: var(--bu-text); border-radius: 999px; padding: .4rem .9rem; min-height: 44px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; }
+    .bu-chip:hover { transform: translateY(-1px); }
+    .bu-chip:active { transform: scale(.97); }
+
+    /* Hero */
+    #hero { min-height: 100svh; display: grid; place-items: center; position: relative; overflow: clip; text-align: center; padding: 4rem 1rem; }
+    .bu-plx { position: absolute; color: var(--bu-muted); opacity: .55; z-index: 0; }
+    .bu-plx:nth-of-type(1) { top: 12%; left: 6%; } .bu-plx:nth-of-type(2) { top: 18%; right: 8%; }
+    .bu-plx:nth-of-type(3) { bottom: 22%; left: 10%; } .bu-plx:nth-of-type(4) { bottom: 14%; right: 12%; }
+    .bu-plx:nth-of-type(5) { top: 48%; left: 44%; }
+    .bu-ring { position: absolute; z-index: 0; opacity: .8; color: var(--bu-accent-ink); }
+    .bu-ring-a { width: min(78vw, 420px); }
+    .bu-ring-b { width: min(56vw, 300px); }
+    .bu-ring-rotate.bu-ring-a { animation: bu-spin 26s linear infinite; }
+    .bu-ring-rotate.bu-ring-b { animation: bu-spin-rev 34s linear infinite; }
+    @keyframes bu-spin { to { transform: rotate(360deg); } }
+    @keyframes bu-spin-rev { to { transform: rotate(-360deg); } }
+    .bu-ring-paused .bu-ring-rotate { animation-play-state: paused; }
+    .bu-ring-text { font-size: 15.5px; letter-spacing: 3px; fill: currentColor; font-family: var(--font-accent); }
+    #bon-door { background: none; border: none; cursor: pointer; z-index: 1; padding: 2rem; min-height: 44px; }
+    #bon-word { position: relative; display: inline-block; font-family: var(--font-display); font-weight: 700; font-size: var(--bu-fs-xl); line-height: .9; letter-spacing: .02em; }
+    #bon-word .ghost { color: transparent; -webkit-text-stroke: 3px var(--bu-text); }
+    #bon-word .fill { position: absolute; inset: 0; color: var(--bu-accent-ink); clip-path: inset(0 100% 0 0); }
+    .bu-no-motion #bon-word .fill, .bu-static #bon-word .fill { clip-path: inset(0 0 0 0); }
+    .bu-door-hint { display: block; margin-top: 1rem; font-family: var(--font-accent); font-size: var(--bu-fs-m); color: var(--bu-muted); animation: bu-blink 2.2s ease-in-out infinite; }
+    @keyframes bu-blink { 50% { opacity: .35; } }
+    .bu-hero-sub { position: absolute; bottom: 2rem; left: 0; right: 0; font-size: var(--bu-fs-s); color: var(--bu-muted); padding: 0 1rem; z-index: 1; }
+
+    /* Deep-link banner */
+    .bu-dl-banner { margin: 1rem auto; max-width: 40rem; border: 2px dashed var(--bu-accent-ink); background: var(--bu-surface); padding: 1rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap; border-radius: 6px; }
+    .bu-dl-banner p { margin: 0; }
+
+    /* Buku */
+    #buku { padding: 2rem 1rem 4rem; }
+    .bu-book { max-width: 72rem; margin: 0 auto; border: 3px solid var(--bu-text); background: var(--bu-bg); border-radius: 8px; box-shadow: 8px 8px 0 var(--bu-line); overflow: hidden; }
+    #world-tabs { display: none; gap: 0; border-bottom: 3px solid var(--bu-text); }
+    #world-tabs button { flex: 1; font-family: var(--font-display); font-size: var(--bu-fs-s); padding: 1rem; min-height: 56px; background: var(--bu-surface); border: none; cursor: pointer; color: var(--bu-muted); }
+    #world-tabs button.on { background: var(--bu-text); color: var(--bu-bg); }
+    .bu-split { display: grid; grid-template-columns: 1fr 1fr; }
+    #dunia-bon { border-right: 3px solid var(--bu-text); padding: 1.5rem; min-width: 0; }
+    #dunia-lunas { padding: 1.5rem; min-width: 0; background: color-mix(in oklch, var(--bu-surface) 45%, var(--bu-bg)); }
+    .bu-world-head h2 { position: relative; font-family: var(--font-display); font-size: var(--bu-fs-m); margin: 0 0 .25rem; letter-spacing: .04em; }
+    .bu-world-head h2 .ghost { color: transparent; -webkit-text-stroke: 1.5px var(--bu-text); }
+    .bu-world-head h2 .fill { position: absolute; inset: 0; color: var(--bu-text); clip-path: inset(0 100% 0 0); }
+    .bu-no-motion .bu-world-head h2 .fill, .bu-static .bu-world-head h2 .fill { clip-path: inset(0 0 0 0); }
+    .bu-world-head p { color: var(--bu-muted); margin: 0 0 1rem; font-family: var(--font-accent); }
+
+    .bu-tools { display: flex; gap: .5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .bu-search { flex: 1; min-width: 10rem; display: flex; align-items: center; gap: .5rem; border: 2px solid var(--bu-text); background: var(--bu-surface); border-radius: 6px; padding: 0 .75rem; }
+    .bu-search input, .bu-filter select { font-size: var(--bu-fs-s); background: transparent; border: none; min-height: 44px; width: 100%; color: var(--bu-text); font-family: var(--font-body); }
+    .bu-search input:focus, .bu-filter select:focus { outline: none; }
+    .bu-search:focus-within, .bu-filter:focus-within { outline: 3px solid var(--bu-accent-ink); outline-offset: 2px; }
+    .bu-filter { border: 2px solid var(--bu-text); background: var(--bu-surface); border-radius: 6px; padding: 0 .5rem; }
+
+    .bu-list { display: grid; gap: 1rem; }
+    .bu-card { position: relative; border: 2px solid var(--bu-text); background: var(--bu-surface); border-radius: 6px; padding: 1rem; box-shadow: 4px 4px 0 var(--bu-line); }
+    .bu-card-head { display: flex; justify-content: space-between; align-items: center; gap: .5rem; margin-bottom: .5rem; }
+    .bu-card-head h3 { font-family: var(--font-display); font-size: var(--bu-fs-s); font-weight: 700; margin: 0; }
+    .bu-badge { font-size: var(--bu-fs-s); font-weight: 700; border: 2px solid currentColor; border-radius: 4px; padding: .15rem .5rem; white-space: nowrap; }
+    .bu-badge-lancar { color: var(--bu-pop-ink); background: var(--bu-pop); }
+    .bu-badge-waspada { color: var(--bu-accent-ink); background: transparent; }
+    .bu-badge-macet { color: var(--bu-bg); background: var(--bu-accent-ink); border-color: var(--bu-accent-ink); }
+    .bu-badge-lunas { color: var(--bu-pop-ink); background: var(--bu-pop); }
+    .bu-card-debts { list-style: none; margin: 0 0 .5rem; padding: 0; display: grid; gap: .25rem; }
+    .bu-card-debts li { display: flex; justify-content: space-between; align-items: baseline; gap: .75rem; border-bottom: 1px dashed var(--bu-line); padding: .25rem 0; }
+    .bu-card-debts li > span:first-child { min-width: 0; }
+    .bu-card-debts li > span:last-child { flex-shrink: 0; text-align: right; }
+    .bu-card-debts em { font-style: normal; color: var(--bu-muted); font-family: var(--font-accent); }
+    .bu-card-pay { font-family: var(--font-accent); color: var(--bu-muted); margin: 0 0 .25rem; }
+    .bu-card-total { margin: .5rem 0; }
+    .bu-card-total strong { font-family: var(--font-display); }
+    .bu-card-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+
+    .bu-btn { font-size: var(--bu-fs-s); font-family: var(--font-body); font-weight: 500; border: 2px solid var(--bu-text); background: var(--bu-bg); color: var(--bu-text); border-radius: 6px; padding: .6rem 1rem; min-height: 44px; cursor: pointer; transition: transform var(--bu-dur-fast) var(--bu-ease-out), box-shadow var(--bu-dur-fast) var(--bu-ease-out); }
+    .bu-btn:hover { transform: translateY(-2px); box-shadow: 3px 3px 0 var(--bu-line); }
+    .bu-btn:active { transform: scale(.97); box-shadow: none; }
+    .bu-btn-pay { background: var(--bu-pop); color: var(--bu-text); font-weight: 700; }
+    .bu-btn-ghost { background: transparent; }
+    .bu-btn-danger { color: var(--bu-accent-ink); border-color: var(--bu-accent-ink); }
+
+    .bu-inline-form { margin-top: .75rem; border-top: 2px dashed var(--bu-line); padding-top: .75rem; display: grid; gap: .5rem; }
+    .bu-inline-form label { display: grid; gap: .25rem; font-size: var(--bu-fs-s); }
+    .bu-inline-form input { font-size: var(--bu-fs-s); font-family: var(--font-body); border: 2px solid var(--bu-text); border-radius: 6px; padding: .6rem; min-height: 44px; background: var(--bu-bg); color: var(--bu-text); width: 100%; }
+    .bu-inline-actions { display: flex; gap: .5rem; }
+    .bu-form-err { color: var(--bu-accent-ink); font-family: var(--font-accent); margin: .25rem 0 0; }
+    .bu-invalid { border-color: var(--bu-accent-ink) !important; animation: bu-shake .4s; }
+    @keyframes bu-shake { 25% { transform: translateX(-4px); } 50% { transform: translateX(4px); } 75% { transform: translateX(-4px); } }
+
+    .bu-stamp-slam { position: absolute; top: 38%; left: 50%; translate: -50% -50%; font-family: var(--font-display); font-weight: 700; font-size: var(--bu-fs-m); color: var(--bu-pop-ink); background: var(--bu-pop); border: 4px solid var(--bu-pop-ink); border-radius: 8px; padding: .4rem 1.2rem; transform: rotate(-12deg); z-index: 5; pointer-events: none; box-shadow: 0 6px 24px rgb(0 0 0 / .25); }
+
+    .bu-empty { border: 2px dashed var(--bu-line); border-radius: 6px; padding: 2rem 1rem; text-align: center; color: var(--bu-muted); }
+    .bu-empty-big { font-family: var(--font-display); font-size: var(--bu-fs-m); color: var(--bu-text); margin: 0 0 .5rem; }
+
+    .bu-cara { margin-top: 1.5rem; border: 2px solid var(--bu-line); border-radius: 6px; background: var(--bu-surface); }
+    .bu-cara summary { cursor: pointer; padding: .9rem 1rem; min-height: 44px; font-weight: 700; font-family: var(--font-display); }
+    .bu-cara ol { margin: 0; padding: 0 1rem 1rem 2rem; display: grid; gap: .5rem; }
+
+    .bu-form { margin-top: 1.5rem; border: 2px solid var(--bu-text); border-radius: 6px; background: var(--bu-surface); padding: 1rem; display: grid; gap: .75rem; box-shadow: 4px 4px 0 var(--bu-line); }
+    .bu-form h3 { font-family: var(--font-display); font-size: var(--bu-fs-s); margin: 0; }
+    .bu-form label { display: grid; gap: .25rem; }
+    .bu-form input, .bu-form select { font-size: var(--bu-fs-s); font-family: var(--font-body); border: 2px solid var(--bu-text); background: var(--bu-bg); color: var(--bu-text); border-radius: 6px; padding: .6rem; min-height: 44px; width: 100%; }
+    .bu-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+    .bu-opt { color: var(--bu-muted); font-family: var(--font-accent); }
+
+    .bu-stats { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-bottom: 1.5rem; }
+    .bu-stat { border: 2px solid var(--bu-text); border-radius: 6px; background: var(--bu-surface); padding: .75rem; }
+    .bu-stat p { margin: 0; }
+    .bu-stat p:first-child { color: var(--bu-muted); font-family: var(--font-accent); }
+    .bu-stat-main { grid-column: 1 / -1; background: var(--bu-text); color: var(--bu-bg); }
+    .bu-stat-main p:first-child { color: var(--bu-bg); opacity: .7; }
+    .bu-total { font-family: var(--font-display); font-size: var(--bu-fs-m); font-weight: 700; }
+    .bu-stat-n { font-family: var(--font-display); font-size: var(--bu-fs-s); font-weight: 700; }
+    .bu-sub { font-family: var(--font-display); font-size: var(--bu-fs-s); margin: 1.5rem 0 .75rem; }
+    .bu-pay-row { display: flex; align-items: center; gap: .75rem; border: 2px solid var(--bu-line); border-radius: 6px; background: var(--bu-surface); padding: .6rem .75rem; list-style: none; }
+    .bu-pay-row em { font-style: normal; color: var(--bu-muted); font-family: var(--font-accent); }
+    .bu-pay-row span:last-child { margin-left: auto; text-align: right; white-space: nowrap; }
+    .bu-stamp-mini { font-family: var(--font-accent); font-weight: 700; font-size: var(--bu-fs-s); color: var(--bu-pop-ink); border: 2px solid var(--bu-pop-ink); border-radius: 4px; padding: .1rem .4rem; transform: rotate(-8deg); background: var(--bu-pop); white-space: nowrap; }
+    .bu-utils { display: flex; flex-wrap: wrap; gap: .5rem; }
+    .bu-sample { margin-top: 1rem; font-family: var(--font-accent); color: var(--bu-muted); }
+    .bu-linklike { background: none; border: none; padding: 0; color: var(--bu-accent-ink); text-decoration: underline; cursor: pointer; font: inherit; min-height: 44px; }
+
+    /* Finale */
+    #finale { padding: 6rem 1rem; text-align: center; }
+    .bu-book-wide { max-width: 56rem; margin: 0 auto; }
+    .bu-finale-kicker { font-family: var(--font-accent); color: var(--bu-muted); }
+    .bu-finale-big { position: relative; font-family: var(--font-display); font-size: var(--bu-fs-m); margin: 1rem 0; }
+    .bu-finale-big .ghost { color: transparent; -webkit-text-stroke: 1.5px var(--bu-text); }
+    .bu-finale-big .fill { position: absolute; inset: 0; color: var(--bu-text); clip-path: inset(0 100% 0 0); }
+    .bu-no-motion .bu-finale-big .fill, .bu-static .bu-finale-big .fill { clip-path: inset(0 0 0 0); }
+
+    .bu-footer { border-top: 3px solid var(--bu-text); padding: 2rem 1rem; text-align: center; display: grid; gap: 1rem; justify-items: center; }
+    #stamp-easter { background: none; border: none; cursor: pointer; color: var(--bu-accent-ink); padding: .5rem; min-width: 44px; min-height: 44px; }
+    #stamp-easter:hover { transform: rotate(-4deg) scale(1.05); }
+    .bu-footer p { color: var(--bu-muted); font-family: var(--font-accent); margin: 0; }
+
+    /* Toast */
+    #toast-region { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); z-index: 80; display: grid; gap: .5rem; width: min(92vw, 26rem); }
+    .bu-toast { display: flex; gap: .6rem; align-items: center; background: var(--bu-text); color: var(--bu-bg); border-radius: 8px; padding: .8rem 1rem; font-size: var(--bu-fs-s); opacity: 0; transform: translateY(12px) scale(.97); transition: opacity var(--bu-dur-normal) var(--bu-ease-out), transform var(--bu-dur-normal) var(--bu-ease-spring); box-shadow: 0 8px 28px rgb(0 0 0 / .3); }
+    .bu-toast.in { opacity: 1; transform: none; }
+    .bu-toast-err { background: var(--bu-accent-ink); color: var(--bu-bg); }
+
+    /* Spotlight (lampu warung) */
+    #spotlight { position: fixed; inset: 0; z-index: 40; pointer-events: none; --sx: 50vw; --sy: 40vh;
+      background: radial-gradient(circle 200px at var(--sx) var(--sy), transparent 0, oklch(0.16 0.03 312 / .20) 100%); }
+
+    .bu-rain { position: fixed; top: 0; z-index: 90; pointer-events: none; }
+
+    @media (max-width: 899px) {
+      #world-tabs { display: flex; }
+      .bu-split { grid-template-columns: 1fr; }
+      #dunia-bon { border-right: none; }
+      #dunia-bon[hidden], #dunia-lunas[hidden] { display: none; }
+      .bu-strip { flex-wrap: wrap; }
+      .bu-strip-actions { width: 100%; flex-wrap: nowrap; overflow-x: auto; padding-bottom: .25rem; }
+      .bu-chip { white-space: nowrap; padding: .35rem .8rem; }
+    }
+    @media (min-width: 900px) {
+      #dunia-bon[hidden], #dunia-lunas[hidden] { display: block; }
+    }
+
+    @media print {
+      .bu-strip, #hero, .bu-dl-banner, #world-tabs, .bu-tools, .bu-form, .bu-cara, .bu-utils, .bu-card-actions,
+      .bu-inline-form, footer.bu-footer, #toast-region, #spotlight, #finale, .bu-sample { display: none !important; }
+      #buku { padding: 0; }
+      .bu-book { box-shadow: none; }
+      .bu-split { grid-template-columns: 1fr 1fr; }
+      #dunia-lunas[hidden] { display: block; }
+      body { background: #fff; }
+    }
+  </style>
+</Layout>

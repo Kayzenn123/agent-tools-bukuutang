@@ -1,0 +1,91 @@
+---
+// BukuUtang — token desain. Palet: mid/monochrome hue 312 (kertas bon ungu-abu)
+// + pop hijau stempel. Hanya 3 ukuran font (constraint seed).
+---
+
+<style is:inline>
+  :root {
+    /* Palet — OKLCH, hue 312 */
+    --bu-bg: oklch(0.71 0.109 312);
+    --bu-surface: oklch(0.63 0.105 312);
+    --bu-surface-deep: oklch(0.56 0.1 312);
+    --bu-text: oklch(0.16 0.03 312);
+    --bu-muted: oklch(0.34 0.045 312);
+    --bu-accent: oklch(0.6 0.225 312);
+    --bu-accent-ink: oklch(0.42 0.19 312);
+    --bu-pop: oklch(0.84 0.216 165);
+    --bu-pop-ink: oklch(0.28 0.09 165);
+    --bu-line: oklch(0.16 0.03 312 / 0.28);
+
+    /* Ukuran font — HANYA 3 (constraint) */
+    --bu-fs-s: 1rem;          /* 16px — UI & body */
+    --bu-fs-m: 1.75rem;       /* 28px — subjudul */
+    --bu-fs-xl: clamp(4.5rem, 19vw, 15rem); /* raksasa */
+
+    /* Motion tokens (skill micro-interactions) */
+    --bu-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --bu-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --bu-dur-fast: 150ms;
+    --bu-dur-normal: 250ms;
+    --bu-dur-slow: 450ms;
+
+    /* Sambung ke token template agar komponen bawaan tidak rusak */
+    --aw-font-sans: var(--font-body);
+    --aw-font-serif: var(--font-display);
+    --aw-font-heading: var(--font-display);
+    --aw-color-primary: oklch(0.42 0.19 312);
+    --aw-color-secondary: oklch(0.34 0.045 312);
+    --aw-color-accent: oklch(0.6 0.225 312);
+    --aw-color-text-heading: oklch(0.16 0.03 312);
+    --aw-color-text-default: oklch(0.16 0.03 312);
+    --aw-color-text-muted: oklch(0.34 0.045 312);
+    --aw-color-bg-page: oklch(0.71 0.109 312);
+
+    ::selection {
+      background: oklch(0.84 0.216 165);
+      color: oklch(0.16 0.03 312);
+    }
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--bu-bg);
+    color: var(--bu-text);
+    font-family: var(--font-body);
+    font-size: var(--bu-fs-s);
+    overflow-x: clip;
+  }
+
+  /* Grain kertas bon (feTurbulence, teknik orisinal #1) */
+  .bu-grain::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.03 0 0 0 0 0.31 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--bu-accent-ink);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>

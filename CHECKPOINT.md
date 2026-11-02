@@ -1,0 +1,3 @@
+- ide (2026-11-02 08:01 WIB): BukuUtang — buku utang-piutang warung offline, diklaim dari ideas.md
+- template (2026-11-02 08:08 WIB): BRIEF.md selesai, seed base 2026-11-10 lolos anti-seragam, template astrowind tersalin, node_modules hardlink OK
+- ui (2026-11-02 08:22 WIB): Astro build OK (base fix via config.yaml trailingSlash:true), modul JS 5 file

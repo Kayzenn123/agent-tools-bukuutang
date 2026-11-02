@@ -1,0 +1,14 @@
+{
+	"pid": 18778,
+	"port": 8931,
+	"url": "http://127.0.0.1:8931",
+	"urls": {
+		"local": [
+			"http://127.0.0.1:8931/agent-tools-bukuutang/"
+		],
+		"network": [],
+		"networkInterfaceNames": []
+	},
+	"background": false,
+	"startedAt": "2026-11-02T01:35:22.696Z"
+}

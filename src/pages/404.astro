@@ -1,0 +1,17 @@
+---
+import Layout from '~/layouts/Layout.astro';
+import { getHomePermalink } from '~/utils/permalinks';
+
+const title = `Halaman tidak ketemu — BukuUtang`;
+---
+
+<Layout metadata={{ title }}>
+  <main style="min-height:70svh;display:grid;place-items:center;text-align:center;padding:3rem 1rem;">
+    <div>
+      <p style="font-family:var(--font-display);font-size:var(--bu-fs-xl);margin:0;color:transparent;-webkit-text-stroke:2px var(--bu-text);" aria-hidden="true">404</p>
+      <h1 style="font-family:var(--font-display);font-size:var(--bu-fs-m);">Bon-nya nggak ketemu, Dek.</h1>
+      <p style="font-family:var(--font-accent);color:var(--bu-muted);">Halaman ini nggak ada di buku. Balik ke depan saja.</p>
+      <p><a class="bu-btn" rel="noopener noreferrer" href={getHomePermalink()} style="display:inline-block;text-decoration:none;margin-top:1rem;">Kembali ke buku</a></p>
+    </div>
+  </main>
+</Layout>

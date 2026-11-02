@@ -1,0 +1,37 @@
+{
+  "seed": "2026-11-10",
+  "totalFontsInPool": 1958,
+  "domain": "arisan",
+  "layout": "split screen dua dunia",
+  "reference": "label kemasan jadul",
+  "constraint": "hanya 3 ukuran font",
+  "motion": {
+    "camera": "parallax 5 layer + zoom out di akhir",
+    "marquee": "marquee melingkar di path SVG",
+    "text": "outline terisi saat scroll",
+    "input": "cursor senter/spotlight mask",
+    "reveal": "clip-path lingkaran"
+  },
+  "icons": {
+    "style": "outline tipis 1px",
+    "source": "Remix"
+  },
+  "fonts": {
+    "display": "Noto Serif Kannada",
+    "body": "Noto Sans Arabic",
+    "accent": "Comic Neue"
+  },
+  "palette": {
+    "mode": "mid",
+    "harmony": "monochrome",
+    "baseHue": 312,
+    "bg": "oklch(0.71 0.109 312)",
+    "surface": "oklch(0.60 0.110 312)",
+    "text": "oklch(0.16 0.030 312)",
+    "muted": "oklch(0.32 0.040 312)",
+    "accent": "oklch(0.62 0.225 312)",
+    "accent2": "oklch(0.71 0.243 312)",
+    "pop": "oklch(0.84 0.216 165)",
+    "note": "Draf. Wajib cek kontras AA dan rapikan lightness/chroma."
+  }
+}
